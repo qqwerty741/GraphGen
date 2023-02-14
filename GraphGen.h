@@ -35,7 +35,7 @@ auto genTree(int minG = 0, int maxG = 1e7, int seed = std::chrono::steady_clock:
 	return Ans;
 }
 
-auto genGraph(int minG, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
+auto genGraph(int minG = 0, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
 	std::mt19937 a(seed);
 	long long v = a() % (maxG - minG + 1) + minG;
 	maxS = (maxS > (v * (v - 1)) / 2 ? (v * (v - 1)) / 2 : maxS);
@@ -52,6 +52,28 @@ auto genGraph(int minG, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed =
 		}
 	}
 	Ans.seed = seed;
+	Ans.mtx = ans;
+	Ans.v = v;
+	Ans.e = Ans.edges.size();
+	return Ans;
+}
+
+auto genMulti(int minG = 0, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
+	std::mt19937 a(seed);
+	long long v = a() % (maxG - minG + 1) + minG;
+	long long d = a() % (maxS - minS + 1) + minS;
+	std::vector<std::vector<int>> ans(v, std::vector<int>(v, 0));
+	Graph Ans;
+	Ans.seed = seed;
+	if(v!=1)
+	for (int i = 0; i < d; i++) {
+		int q = a() % v, w = a() % v;
+		if (q == w)i--;
+		else {
+			ans[q][w] = ans[w][q] = ans[w][q] + 1;
+			Ans.edges.emplace_back(q, w);
+		}
+	}
 	Ans.mtx = ans;
 	Ans.v = v;
 	Ans.e = Ans.edges.size();
