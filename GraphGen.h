@@ -4,29 +4,6 @@
 #include <random>
 #include <chrono>
 #include<algorithm>
-#include<iostream>
-//PrimeGraph - 0 или 1 ребро между любой парой вершин
-//		Ген: 1 или 0 в матрице смежности
-//MultiGraph - Граф без петель, содержит параллельные ребра
-//		Ген: случайное число от 1 до N в матрице смежности
-//NullGraph - Без ребер
-//		Ген: случайное число вершин
-//CompleteGraph - Полный граф
-//		Ген: Случайный NullGraph со всеми единицами в матрице
-//PseudoGraph - Мультиграф с петлями
-//		Ген: мультиграф с просмотром главной диагонали
-//RegularGraph - Граф с одинаковыми степенями вершин
-//		Ген: Рандомное число до количества вершин
-//BipartiteGraph - двудольный граф
-//		Ген: Случайное кол-во вершин в каждой доле, создаем в матице группы, делаем рандом ребер между вершинами двух разных групп
-//DirectedGraph - ориентированный граф
-//		Ген: Рандомное заполнение матрицы смежности без зеркального отражения
-//Количество компонент связанности
-//		Ген: несколько графов, соотв условию
-//CyclicGraph - граф-цикл
-//		Ген: Случайное дерево с дополнительным ребром
-//TreeGraph - дерево - сделано
-//		Ген: Рандомный вектор, где мы будем получать вершину-предка - сделано
 
 
 struct Graph
@@ -89,10 +66,13 @@ auto genRegul(int minG = 0, int maxG = 1e7, int minS = 0, int maxS = 1e5, int se
 			}
 		}
 	}
-	std::cout << "Seed: " << seed<<std::endl;
-	return ans;
+	Graph Ans;
+	Ans.seed = seed;
+	Ans.mtx = ans;
+	return Ans;
 }
-std::vector<std::vector<int>> genGraph(int minG, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
+
+auto genGraph(int minG, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
 	std::mt19937 a(seed);
 	long long v = a() % (maxG - minG + 1) + minG;
 	maxS = (maxS > (v * (v - 1)) / 2 ? (v * (v - 1)) / 2 : v);
@@ -105,6 +85,8 @@ std::vector<std::vector<int>> genGraph(int minG, int maxG = 1e9, int minS = 0, i
 		else ans[q][w] = ans[w][q] = 1;
 		
 	}
-	std::cout << "Seed: " << seed << std::endl;
-	return ans;
+	Graph Ans;
+	Ans.seed = seed;
+	Ans.mtx = ans;
+	return Ans;
 }
