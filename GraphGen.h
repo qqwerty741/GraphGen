@@ -1,10 +1,8 @@
 #pragma once
 #include<vector>
-#include<string>
-#include <random>
-#include <chrono>
-#include<algorithm>
-#include<iostream>
+//#include <chrono>
+//#include<algorithm>
+//#include<iostream>
 
 
 struct Graph
@@ -84,42 +82,6 @@ auto genMulti(int minG = 0, int maxG = 1e9, int minS = 0, int maxS = 1e5, int se
 	return Ans;
 }
 
-auto genNull(int minG = 0, int maxG = 1e9, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
-	std::mt19937 a(seed);
-	long long v = a() % (maxG - minG + 1) + minG;
-	std::vector<std::vector<int>> ans(v, std::vector<int>(v, 0));
-	Graph Ans;
-	Ans.seed = seed;
-	Ans.mtx = ans;
-	Ans.v = v;
-	Ans.e = Ans.edges.size();
-	return Ans;
-}
-
-auto genCompl(int minG = 0, int maxG = 1e9, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
-	std::mt19937 a(seed);
-	long long v = a() % (maxG - minG + 1) + minG;
-	Graph Ans;
-	std::vector<std::vector<int>> g(v, std::vector<int>(v));
-	Ans.listsm.resize(v);
-	for (int i = 1; i < v; i++) {
-		for (int j = 0; j < i; j++) {
-			g[i][j] = a() % 2;
-			g[j][i] = g[i][j];
-			if (g[i][j] == 1) {
-				Ans.listsm[i].push_back(j);
-				Ans.listsm[j].push_back(i);
-				Ans.edges.emplace_back(i, j);
-			}
-		}
-	}
-	Ans.seed = seed;
-	Ans.mtx = g;
-	Ans.v = v;
-	Ans.e = Ans.edges.size();
-	return Ans;
-}
-
 auto genDirGraph(int minG = 0, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
 	std::mt19937 a(seed);
 	long long v = a() % (maxG - minG + 1) + minG;
@@ -143,18 +105,18 @@ auto genDirGraph(int minG = 0, int maxG = 1e9, int minS = 0, int maxS = 1e5, int
 	return Ans;
 }
 
-auto genPseudo(int minG = 0, int maxG = 1e9, int minS = 0, int maxS = 1e5, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
+auto genPseudo(int minG = 0, int maxG = 1e9, int seed = std::chrono::steady_clock::now().time_since_epoch().count()) {
 	std::mt19937 a(seed);
 	long long v = a() % (maxG - minG + 1) + minG;
-	long long d = a() % (maxS - minS + 1) + minS;
 	std::vector<std::vector<int>> ans(v, std::vector<int>(v, 0));
 	Graph Ans;
 	Ans.seed = seed;
 	if (v != 1)
-		for (int i = 0; i < d; i++) {
-			int q = a() % v, w = a() % v;
-			ans[q][w] = ans[w][q] = ans[w][q] + 1;
-			Ans.edges.emplace_back(q, w);
+		for (int i = 1; i < v; i++) {
+			for (int j = 0; j <= i; j++) {
+				ans[i][j] = ans[j][i] = a() % 2;
+				Ans.edges.emplace_back(i, j);
+			}
 		}
 	Ans.mtx = ans;
 	Ans.v = v;
